@@ -1,8 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-interface Usuario {
+// O que o servidor nos devolve
+export interface Usuario {
+  name: string;
+  email: string;
+}
+
+// O que é enviado para a API
+export interface AuthRequest {
   name?: string;
   email: string;
   password: string;
@@ -12,15 +19,16 @@ interface Usuario {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/usuarios';
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = 'http://localhost:8080/api/usuarios';
 
-  cadastrar(usuario: Usuario): Observable<string> {
+  cadastrar(usuario: AuthRequest): Observable<string> {
     return this.http.post(`${this.apiUrl}/cadastro`, usuario, {
       responseType: 'text',
     });
   }
-  login(usuario: Usuario): Observable<Usuario | null> {
-    return this.http.post<Usuario | null>(`${this.apiUrl}/login`, usuario);
+
+  login(credentials: AuthRequest): Observable<Usuario | null> {
+    return this.http.post<Usuario | null>(`${this.apiUrl}/login`, credentials);
   }
 }
