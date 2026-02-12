@@ -1,7 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth-service';
+import { AuthService, AuthRequest, Usuario } from '../../services/auth-service';
+
+// Definição da estrutura do formulário
+interface AuthForm {
+  name: FormControl<string | null>;
+  email: FormControl<string | null>;
+  password: FormControl<string | null>;
+}
 
 @Component({
   selector: 'auth-auth',
@@ -16,7 +23,7 @@ export class Auth implements OnInit {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
 
-  form!: FormGroup;
+  form!: FormGroup<AuthForm>;
   isLoginMode = signal(true);
 
   ngOnInit(): void {
@@ -39,11 +46,11 @@ export class Auth implements OnInit {
   onSubmit(): void {
     if (this.form.invalid) return;
 
-    const credentials = this.form.value;
+    const credentials = this.form.getRawValue() as AuthRequest;
 
     if (this.isLoginMode()) {
       this.authService.login(credentials).subscribe({
-        next: (usuario) => {
+        next: (usuario: Usuario | null) => {
           if (usuario) {
             localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
             this.router.navigate(['/home']);
@@ -54,7 +61,7 @@ export class Auth implements OnInit {
       });
     } else {
       this.authService.cadastrar(credentials).subscribe({
-        next: (msg) => {
+        next: (msg: string) => {
           alert(msg);
           this.toggleMode();
         },
