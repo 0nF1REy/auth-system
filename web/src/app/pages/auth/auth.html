@@ -5,7 +5,9 @@
         <i class="fa-solid" [class]="isLoginMode() ? 'fa-shield-halved' : 'fa-user-plus'"></i>
       </div>
       <h2>{{ isLoginMode() ? 'Login' : 'Cadastro' }}</h2>
-      <p class="auth-subtitle">Acesse o Tutorial Lab para continuar</p>
+      <p class="auth-subtitle">
+        {{ isLoginMode() ? 'Acesse sua conta para continuar' : 'Crie sua conta para começar' }}
+      </p>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
@@ -41,7 +43,7 @@
       </div>
 
       <button type="submit" class="auth-submit-btn" [disabled]="form.invalid">
-        <span>{{ isLoginMode() ? 'Entrar no Sistema' : 'Criar minha conta' }}</span>
+        <span>{{ isLoginMode() ? 'Entrar' : 'Cadastrar' }}</span>
         <i class="fa-solid fa-arrow-right"></i>
       </button>
     </form>
