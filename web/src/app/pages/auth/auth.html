@@ -2,7 +2,7 @@
   <div class="auth-card">
     <div class="auth-header">
       <div class="auth-icon">
-        <i class="bi" [class]="isLoginMode() ? 'bi-shield-lock' : 'bi-person-plus'"></i>
+        <i class="fa-solid" [class]="isLoginMode() ? 'fa-shield-halved' : 'fa-user-plus'"></i>
       </div>
       <h2>{{ isLoginMode() ? 'Login' : 'Cadastro' }}</h2>
       <p class="auth-subtitle">Acesse o Tutorial Lab para continuar</p>
@@ -13,7 +13,7 @@
         <div class="field-group">
           <label for="name">Nome completo</label>
           <div class="input-wrapper">
-            <i class="bi bi-person"></i>
+            <i class="fa-solid fa-user"></i>
             <input id="name" formControlName="name" placeholder="Seu nome" />
           </div>
         </div>
@@ -22,7 +22,7 @@
       <div class="field-group">
         <label for="email">Endereço de e-mail</label>
         <div class="input-wrapper">
-          <i class="bi bi-envelope"></i>
+          <i class="fa-solid fa-envelope"></i>
           <input id="email" type="email" formControlName="email" placeholder="email@exemplo.com" />
         </div>
       </div>
@@ -30,7 +30,7 @@
       <div class="field-group">
         <label for="password">Senha</label>
         <div class="input-wrapper">
-          <i class="bi bi-key"></i>
+          <i class="fa-solid fa-key"></i>
           <input
             id="password"
             type="password"
@@ -42,7 +42,7 @@
 
       <button type="submit" class="auth-submit-btn" [disabled]="form.invalid">
         <span>{{ isLoginMode() ? 'Entrar no Sistema' : 'Criar minha conta' }}</span>
-        <i class="bi bi-arrow-right-short"></i>
+        <i class="fa-solid fa-arrow-right"></i>
       </button>
     </form>
 
