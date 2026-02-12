@@ -1,30 +1,58 @@
-<body>
-  <div class="auth-container">
-    <h2>{{ isLoginMode ? 'Login' : 'Cadastro' }}</h2>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon">
+        <i class="bi" [class]="isLoginMode() ? 'bi-shield-lock' : 'bi-person-plus'"></i>
+      </div>
+      <h2>{{ isLoginMode() ? 'Login' : 'Cadastro' }}</h2>
+      <p class="auth-subtitle">Acesse o Tutorial Lab para continuar</p>
+    </div>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div *ngIf="!isLoginMode">
-        <label for="name">Nome :</label>
-        <input id="name" formControlName="name" />
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      @if (!isLoginMode()) {
+        <div class="field-group">
+          <label for="name">Nome completo</label>
+          <div class="input-wrapper">
+            <i class="bi bi-person"></i>
+            <input id="name" formControlName="name" placeholder="Seu nome" />
+          </div>
+        </div>
+      }
+
+      <div class="field-group">
+        <label for="email">Endereço de e-mail</label>
+        <div class="input-wrapper">
+          <i class="bi bi-envelope"></i>
+          <input id="email" type="email" formControlName="email" placeholder="email@exemplo.com" />
+        </div>
       </div>
 
-      <label for="email">Email :</label>
-      <input id="email" type="email" formControlName="email" />
+      <div class="field-group">
+        <label for="password">Senha</label>
+        <div class="input-wrapper">
+          <i class="bi bi-key"></i>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            [placeholder]="isLoginMode() ? '••••••••' : 'Mínimo 6 dígitos'"
+          />
+        </div>
+      </div>
 
-      <label for="password">Senha :</label>
-      <input
-        id="password"
-        type="password"
-        formControlName="password"
-        [placeholder]="isLoginMode ? '' : 'Informe pelo menos 6 digitos'"
-      />
-
-      <button type="submit">{{ isLoginMode ? 'Entrar' : 'Cadastrar' }}</button>
+      <button type="submit" class="auth-submit-btn" [disabled]="form.invalid">
+        <span>{{ isLoginMode() ? 'Entrar no Sistema' : 'Criar minha conta' }}</span>
+        <i class="bi bi-arrow-right-short"></i>
+      </button>
     </form>
 
-    <p>
-      {{ isLoginMode ? 'Não tem conta?' : 'Já tem conta?' }}
-      <button (click)="toggleMode()">{{ isLoginMode ? 'Criar conta' : 'Fazer login' }}</button>
-    </p>
+    <div class="auth-footer">
+      <p class="toggle-text">
+        {{ isLoginMode() ? 'Ainda não tem conta?' : 'Já possui cadastro?' }}
+        <button type="button" class="toggle-btn" (click)="toggleMode()">
+          {{ isLoginMode() ? 'Cadastre-se' : 'Fazer login' }}
+        </button>
+      </p>
+    </div>
   </div>
-</body>
+</div>
