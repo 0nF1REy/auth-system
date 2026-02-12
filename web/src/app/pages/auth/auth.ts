@@ -1,10 +1,73 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth-service';
+
+interface Usuario {
+  name: string;
+  email: string;
+  password: string;
+}
 
 @Component({
   selector: 'auth-auth',
-  imports: [],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './auth.html',
   styleUrl: './auth.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Auth {}
+export class Auth implements OnInit {
+  form!: FormGroup;
+  isLoginMode = true;
+
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+  ) {}
+
+  ngOnInit(): void {
+    this.setupForm();
+  }
+
+  setupForm(): void {
+    this.form = this.fb.group({
+      name: [''],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+  }
+  toggleMode(): void {
+    this.isLoginMode = !this.isLoginMode;
+  }
+
+  onSubmit(): void {
+    if (this.form.invalid) return;
+
+    const { name, email, password } = this.form.value;
+
+    if (this.isLoginMode) {
+      this.authService.login({ email, password }).subscribe((usuario) => {
+        if (usuario) {
+          localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+          this.router.navigate(['/home']);
+        } else {
+          alert('Email ou senha invalidos');
+        }
+      });
+    } else {
+      this.authService.cadastrar({ name, email, password }).subscribe((msg) => {
+        alert(msg);
+        this.toggleMode();
+        this.form.reset();
+      });
+    }
+  }
+}
